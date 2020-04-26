@@ -50,7 +50,7 @@ class SignUp extends Component {
 				<form className="sign-up" onSubmit={this.handleSubmit}>
 					<FormInput
 						name="displayName"
-						value={this.state.displayName}
+						value={this.state.displayName} 
 						type="text"
 						onChange={this.handleChange}
 						label="Display Name"
