@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../src/redux/store';
