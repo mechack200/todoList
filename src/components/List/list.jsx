@@ -2,16 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import { ImCheckboxChecked } from 'react-icons/im';
-import { media, customMediaQuery } from '../TodoInput/todoInput';
 
-const ListContainer = styled.div`
+export const ListContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 90%;
 	margin: 0 auto;
 `;
 
-const List = styled.div`
+export const List = styled.div`
 	margin: 2rem 0;
 	width: 100%;
 	font-size: 1rem;
@@ -19,10 +18,7 @@ const List = styled.div`
 	margin-top: 2rem;
 	/* border: 1px solid indigo; */
 `;
-const MdEditC = styled.h2`
-	color: '#5c5f5c';
-`;
-const Todo = styled.div`
+export const Todo = styled.div`
 	padding: 0.5rem;
 	display: flex;
 	justify-content: space-between;
@@ -31,7 +27,7 @@ const Todo = styled.div`
 	padding: 0.5rem 0;
 	padding-left: 1rem;
 `;
-const Task = styled.div`
+export const Task = styled.div`
 	color: grey;
 	flex-grow: 4;
 	text-align: left;
@@ -41,7 +37,7 @@ const Task = styled.div`
 	padding-top: 1rem;
 `;
 
-const EditingIcons = styled.div`
+export const EditingIcons = styled.div`
 	display: flex;
 	flex-direction: row;
 	padding: 0.5rem 0;
@@ -52,21 +48,43 @@ const EditingIcons = styled.div`
 	/* border: 1px solid grey; */
 `;
 
-const Lists = ({ todoList, done, toggleDone }) => {
+const CheckButton = styled(ImCheckboxChecked)`
+	/* color: green; */
+	color: ${(props) => (props.checked ? 'green' : '#5c5f5c')};
+`;
+
+const Lists = ({
+	todoList,
+	deleteTask,
+	handleDoneTask,
+	handleChecked,
+	checked,
+}) => {
 	// const displayAllTask =
 	return (
 		<ListContainer>
+			<h2>all lists</h2>
 			{todoList.map((listItem, i) => (
-				<List>
+				<List key={i}>
 					<Todo>
-						<Task key={i}>{listItem.name}</Task>
+						<Task>{listItem.name}</Task>
 						<EditingIcons>
-							<ImCheckboxChecked
-								onClick={toggleDone}
-								/* style={{ color: '#5c5f5c' }} */
+							<CheckButton
+								onClick={() => {
+									handleDoneTask(listItem.id);
+									handleChecked();
+								}}
+								changeColor={true}
+								// style={{ color: '#5c5f5c' }}
 							/>
-							<MdEdit style={{ color: '#a7a706' }} />
-							<MdDelete style={{ color: '#c44f4f' }} />
+
+							<MdEdit
+							// style={{ color: '#a7a706' }}
+							/>
+							<MdDelete
+								onClick={() => deleteTask(listItem.id)}
+								// style={{ color: '#c44f4f' }}
+							/>
 						</EditingIcons>
 					</Todo>
 				</List>

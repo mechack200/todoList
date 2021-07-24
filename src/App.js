@@ -2,62 +2,122 @@ import React, { Component } from 'react';
 import TodoInput from './components/TodoInput/todoInput';
 import './App.css';
 import TodoList from './components/TodoList/todoList';
-import DeleteButtons from './components/DeleteButtons/delete';
 import { v4 as uuidV4 } from 'uuid';
-// import PropTypes from 'prop-types';
+import FinishedTask from './components/doneTasks/finishedTask';
+
 export default class App extends Component {
-	state = { done: false, todoList: [], task: '' };
+	state = { todoList: [], imputValue: '', finishedTask: [], checked: false };
 
 	handleInputChange = (event) => {
-		this.setState({ task: event.target.value });
-		console.log(this.state.task);
+		this.setState({ inputValue: event.target.value });
+	};
+
+	handleChecked = () => {
+		this.setState((prevState) => ({
+			checked: !prevState.checked,
+		}));
+		console.log(this.state.checked);
 	};
 
 	handleAddTask = (e) => {
-		this.setState((prevState) => ({
-			todoList: [
-				...prevState.todoList,
-				{
-					name: this.state.task,
-					done: this.state.done,
-					id: uuidV4(),
-				},
-			],
-		}));
+		if (this.state.inputValue !== '') {
+			let newTask = {
+				name: this.state.inputValue,
+				done: false,
+				id: uuidV4(),
+				time: new Date(),
+			};
+			this.setState((prevState) => {
+				return {
+					todoList: prevState.todoList.concat(newTask),
+				};
+			});
+			this.setState({ inputValue: '' });
+		}
+		console.log(this.state.todoList);
+		e.preventDefault();
+	};
+
+	handleDoneTask = (id) => {
+		const { todoList } = this.state;
+		const new_array = todoList.map((element) =>
+			element.id === id ? { ...element, done: 'true' } : element
+		);
+		this.setState({ todoList: new_array });
+		console.log(todoList);
+	};
+
+	deleteAllTasks = () => {
+		this.setState({ todoList: [] });
 		console.log(this.state.todoList);
 	};
-	// change undone task proper to done true or false
-	toggleDone = () => {
-		this.setState((prevState) => ({ done: !prevState.done }));
-		console.log(this.state.done);
+	deleteDoneTask = () => {
+		const { todoList } = this.state;
+		const new_array = todoList;
+		const doneTask = new_array.filter((task) => task.done === false);
+		return this.setState({ todoList: doneTask });
+	};
+	displayTodoTask = () => {
+		const { todoList, finishedTask } = this.state;
+		const new_array = todoList;
+		const doneList = new_array.filter((task) => task.done === false);
+
+		return this.setState({ todoList: doneList });
+	};
+	displayAllTasks = () => {
+		const { todoList, finishedTask } = this.state;
+		const new_array = todoList;
+		const todoTask = new_array.filter((task) => task.done === false);
+		const tempDoneTask = new_array.filter((task) => task.done !== false);
+		this.setState({ finishedTask: tempDoneTask });
+		const allTask = [...tempDoneTask, ...todoTask];
+		this.setState({ todoList: allTask });
+		console.log(this.state.todoList);
+	};
+	displayDoneTask = () => {
+		const { todoList } = this.state;
+		const new_array = todoList;
+		const doneList = new_array.filter((task) => task.done !== false);
+		if (doneList.length < 1) {
+			console.log('no done task added yet');
+			return 'no done task yet';
+		}
+		return this.setState({ todoList: doneList });
 	};
 
-	//selectDoneTask()
-	DisplayDoneTasks = (id) => {
-		const doneTask = this.state.todoList.fiiter(
-			(task, i) => task.done === true
-		);
-		console.log(doneTask);
+	deleteTask = (id) => {
+		const { todoList } = this.state;
+		const new_array = todoList;
+		//   get task id
+		const findTask = new_array.find((item) => item.id === id);
+		if (findTask) {
+			const new_list = new_array.filter((task) => task.id !== id);
+			this.setState({ todoList: new_list });
+		}
 	};
 
-	componentDidMount() {
-		this.handleAddTask();
-		this.toggleDone();
-		// console.log(this.state.todoList);
-	}
+	componentDidMount() {}
 	render() {
-		const { task, todoList, done } = this.state;
+		const { inputValue, todoList, finishedTask, checked } = this.state;
 		return (
 			<div className="App">
 				<TodoInput
-					task={task}
+					inputValue={inputValue}
 					handleInputChange={this.handleInputChange}
 					handleAddTask={this.handleAddTask}
 				/>
 				<TodoList
 					todoList={todoList}
-					done={done}
-					toggleDone={this.toggleDone}
+					finishedTask={finishedTask}
+					checked={checked}
+					handleDoneTask={this.handleDoneTask}
+					deleteTask={this.deleteTask}
+					deleteAllTasks={this.deleteAllTasks}
+					deleteDoneTask={this.deleteDoneTask}
+					displayDoneTask={this.displayDoneTask}
+					displayAllTasks={this.displayAllTasks}
+					displayTodoTask={this.displayTodoTask}
+					handleChecked={this.handleChecked}
 				/>
 			</div>
 		);

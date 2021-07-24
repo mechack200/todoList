@@ -33,7 +33,7 @@ export const Title = styled.h2`
 	padding: 0.2rem 0;
 	text-transform: uppercase;
 `;
-const InputAddButton = styled.div`
+const InputAddButton = styled.form`
 	display: flex;
 	flex-direction: column;
 	width: 90%;
@@ -77,7 +77,7 @@ const Input = styled.input`
 	border-top-right-radius: 0.5rem;
 `;
 
-const TodoInput = ({ task, handleInputChange, handleAddTask }) => {
+const TodoInput = ({ inputValue, handleInputChange, handleAddTask }) => {
 	return (
 		<Wrapper>
 			<Title>Todo input</Title>
@@ -87,14 +87,16 @@ const TodoInput = ({ task, handleInputChange, handleAddTask }) => {
 						<FaBook />
 					</SaveIcon>
 					<Input
-						name="task"
-						value={task}
+						name="inputValue"
+						value={inputValue}
 						onChange={handleInputChange}
 						type="text"
 						placeholder="New Todo"
 					/>
 				</SaveInput>
-				<Button onClick={handleAddTask}>Add new task</Button>
+				<Button disabled={!inputValue} onClick={handleAddTask}>
+					Add new task
+				</Button>
 			</InputAddButton>
 		</Wrapper>
 	);
